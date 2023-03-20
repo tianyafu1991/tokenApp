@@ -1,6 +1,7 @@
 package com.hwly.tokenapp.token;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hwly.tokenapp.constant.TokenConstant;
 import com.hwly.tokenapp.modal.Token;
 import com.hwly.tokenapp.utils.RedisUtil;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class RedisTokenDao implements TokenDao {
     @Resource
     private RedisUtil redisUtil;
-    private long expireIn = 2 * 3600 * 1000L;
+//    private long expireIn = 2 * 3600 * 1000L;
 
     /**
      * 生成或查询token
@@ -26,14 +27,14 @@ public class RedisTokenDao implements TokenDao {
         Token token;
         Map<String, String> tokenMap = redisUtil.hgetall(key);
         if (tokenMap == null || tokenMap.size() == 0) {
-            token = Token.createToken(expireIn);
+            token = Token.createToken(TokenConstant.EXPIRE_IN_TIME_SECOND);
             tokenMap = new HashMap<>();
-            tokenMap.put("generateTime", String.valueOf(token.getGenerateTime()));
-            tokenMap.put("expireTime", String.valueOf(token.getExpireTime()));
-            tokenMap.put("expireIn", String.valueOf(token.getExpireIn()));
-            tokenMap.put("accessToken", String.valueOf(token.getAccessToken()));
-            redisUtil.hmsetWithTime(key, tokenMap, expireIn);
-            redisUtil.hmsetWithTime(getTokenKey(token.getAccessToken()), values, expireIn);
+            tokenMap.put(TokenConstant.GENERATE_TIME, String.valueOf(token.getGenerateTime()));
+            tokenMap.put(TokenConstant.EXPIRE_TIME, String.valueOf(token.getExpireTime()));
+            tokenMap.put(TokenConstant.EXPIRE_IN, String.valueOf(token.getExpireIn()));
+            tokenMap.put(TokenConstant.ACCESS_TOKEN, String.valueOf(token.getAccessToken()));
+            redisUtil.hmsetWithTime(key, tokenMap, TokenConstant.EXPIRE_IN_TIME_SECOND);
+            redisUtil.hmsetWithTime(getTokenKey(token.getAccessToken()), values, TokenConstant.EXPIRE_IN_TIME_SECOND);
         } else {
             token = JSONObject.parseObject(JSONObject.toJSONString(tokenMap), Token.class);
         }
@@ -46,6 +47,6 @@ public class RedisTokenDao implements TokenDao {
     }
 
     private String getTokenKey(String token) {
-        return "token:" + token;
+        return TokenConstant.TOKEN_SUFFIX + token;
     }
 }

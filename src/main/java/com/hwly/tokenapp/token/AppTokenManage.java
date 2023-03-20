@@ -1,6 +1,7 @@
 package com.hwly.tokenapp.token;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hwly.tokenapp.constant.TokenConstant;
 import com.hwly.tokenapp.modal.AppParam;
 import com.hwly.tokenapp.modal.AppTokenGetParam;
 import com.hwly.tokenapp.modal.Token;
@@ -23,9 +24,6 @@ public class AppTokenManage implements TokenManage<AppTokenGetParam, AppParam> {
     @Resource
     private TokenDao tokenDao;
 
-//    public AppTokenManage() {
-//        this.tokenDao=new RedisTokenDao();
-//    }
 
     @Override
     public Token build(AppTokenGetParam getTokenParam) throws Exception {
@@ -53,6 +51,6 @@ public class AppTokenManage implements TokenManage<AppTokenGetParam, AppParam> {
     }
 
     private String getSaveKey(AppTokenGetParam getTokenParam){
-        return "appKey-token:"+getTokenParam.getAppKey();
+        return TokenConstant.ACCESS_TOKEN_SUFFIX +getTokenParam.getAppKey();
     }
 }

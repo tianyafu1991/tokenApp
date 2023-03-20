@@ -1,5 +1,6 @@
 package com.hwly.tokenapp.service.impl;
 
+import com.hwly.tokenapp.constant.TokenConstant;
 import com.hwly.tokenapp.modal.AppTokenGetParam;
 import com.hwly.tokenapp.service.AppTokenService;
 import com.hwly.tokenapp.token.AppTokenManage;
@@ -42,9 +43,9 @@ public class AppTokenServiceImpl implements AppTokenService {
      * @return
      */
     private String validateApp(String appKey) throws Exception {
-        Map<String, String> appInfo = redisUtil.hgetall("appKey:" + appKey);
+        Map<String, String> appInfo = redisUtil.hgetall(TokenConstant.APP_KEY_SUFFIX + appKey);
         if (appInfo != null && appInfo.size() > 0) {
-            return appInfo.get("appSecret");
+            return appInfo.get(TokenConstant.APP_SECRET);
         } else {
             throw new Exception("appKey不存在");
         }

@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Redis工具类
- *
  */
 @Component
 public class RedisUtil {
@@ -52,13 +51,7 @@ public class RedisUtil {
      * @return 返回OK 异常返回null
      */
     public boolean hmsetWithTime(String key, Map<String, String> map, long time) {
-        try {
-            redisTemplate.opsForHash().putAll(key, map);
-            return expire(key, time);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        return hmsetString(key, map, time);
     }
 
     /**
@@ -257,6 +250,27 @@ public class RedisUtil {
      * @return true成功 false失败
      */
     public boolean hmset(String key, Map<String, Object> map, long time) {
+        try {
+            redisTemplate.opsForHash().putAll(key, map);
+            if (time > 0) {
+                expire(key, time);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * HashSet 并设置时间
+     *
+     * @param key  键
+     * @param map  对应多个键值
+     * @param time 时间(秒)
+     * @return true成功 false失败
+     */
+    public boolean hmsetString(String key, Map<String, String> map, long time) {
         try {
             redisTemplate.opsForHash().putAll(key, map);
             if (time > 0) {

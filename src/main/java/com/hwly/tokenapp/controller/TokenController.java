@@ -2,6 +2,7 @@ package com.hwly.tokenapp.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.hwly.tokenapp.constant.TokenConstant;
 import com.hwly.tokenapp.modal.AppParam;
 import com.hwly.tokenapp.modal.Token;
 import com.hwly.tokenapp.response.BaseResponse;
@@ -58,9 +59,9 @@ public class TokenController {
     public BaseResponse setToken() {
         String appKey = "1a748b70d0cb4a8a8e37e959f4a4f1e6";
         String appSecret = "0c128efdc2ef45c1a7be39462701e65b";
-        String key = "appKey:" + appKey;
-        redisUtil.hset(key,"appKey",appKey);
-        redisUtil.hset(key,"appSecret",appSecret);
+        String key = TokenConstant.APP_KEY_SUFFIX + appKey;
+        redisUtil.hset(key,TokenConstant.APP_KEY,appKey);
+        redisUtil.hset(key,TokenConstant.APP_SECRET,appSecret);
 
         return BaseResponse.successInstance("成功");
     }
